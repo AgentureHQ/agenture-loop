@@ -3,7 +3,6 @@ status: backlog
 slug: task_escalation_protocol
 epic: agentic_sdlc_rework
 title: Escalation protocol for upstream design gaps detected during implementation
-draft: true
 ---
 
 # Escalation protocol for upstream design gaps detected during implementation

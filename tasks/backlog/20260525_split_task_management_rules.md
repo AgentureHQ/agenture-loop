@@ -3,7 +3,6 @@ status: backlog
 kind: task
 feature: rules_split_and_new_files
 title: Split task-management.md into composition rules + persistence in taskman.sh help
-draft: true
 ---
 
 # Split task-management.md into composition rules + persistence in taskman.sh help

@@ -2,7 +2,6 @@
 status: backlog
 slug: agentic_sdlc_rework
 title: Agentic SDLC rework — recursive workflow, unified skills, role separation
-draft: true
 ---
 
 # Agentic SDLC rework — recursive workflow, unified skills, role separation

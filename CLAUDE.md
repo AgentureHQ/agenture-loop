@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 @.claude/rules/first-principles.md
 
+## Architecture rework in flight
+
+Epic `agentic_sdlc_rework` (see `tasks/epics/`) is partly delivered. Feature `unified_skills_and_cleanup` is closing — the verb-noun skill surface (`/agn:define|design|plan|implement|validate <level>`) is live. Five features remain in flight: `rules_split_and_new_files` (split task-management rules; persistence moves to `taskman.sh help`), `planner_subagent` (level-aware Planner for Design + Plan), `task_escalation_protocol` (halt-and-route for upstream design gaps), `qa_subagent_and_validation` (QA sub-agent for feature/epic/product), and `docsync_close_hook` (PostClose hook + `/agn:docs-sync`). Until those ship, the Planner and QA sub-agents are placeholders inside the unified skills, and doc sync remains manual.
+
 ## What this repo is
 
 A Claude Code **plugin marketplace** (`agenture`) that ships one plugin today: `agn` — an agentic SDLC loop. There is no application code, no build, and no test framework. The deliverables are:
@@ -88,4 +92,4 @@ A skill lives at `plugins/agn/skills/<name>/SKILL.md`. The frontmatter `name:` f
 - No package manager, no `package.json`, no `requirements.txt`, no language toolchain.
 - No automated tests. Validation is `./plugins/agn/scripts/taskman.sh validate`, which checks frontmatter and folder/status consistency.
 - No CI configuration in-tree.
-- No `settings.json` enabled at the repo root (`settings.json.disabled` exists as a reference but is intentionally inert).
+- No `settings.json` at the repo root.

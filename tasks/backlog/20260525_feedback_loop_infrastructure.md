@@ -2,7 +2,6 @@
 status: backlog
 kind: task
 title: Feedback-loop infrastructure for autonomous task-level design
-draft: true
 ---
 
 # Feedback-loop infrastructure for autonomous task-level design

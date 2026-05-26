@@ -3,7 +3,6 @@ status: backlog
 slug: docsync_close_hook
 epic: agentic_sdlc_rework
 title: Auto-fired doc maintenance on work-unit closure
-draft: true
 ---
 
 # Auto-fired doc maintenance on work-unit closure

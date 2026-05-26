@@ -32,22 +32,17 @@ See `rules/task-management.md` for the full model.
 
 ## Skills
 
-The plugin ships 14 skills, namespaced as `/agn:<scope>-<action>`. Skills group by scope under tab completion.
+The plugin ships 8 skills. Lifecycle skills follow the verb-noun pattern `/agn:<verb> <level>`; tool skills retain their action-named form.
 
-### SDLC workflow (run in order for new products)
+### SDLC workflow (lifecycle skills)
 
-| Scope | Skill | What it does |
-|-------|-------|--------------|
-| Product | `/agn:product-define` | Vision, spec, requirements in `docs/` |
-| Product | `/agn:product-design` | `docs/architecture.md` |
-| Epic | `/agn:epic-create` | Epic file + linked feature files |
-| Epic | `/agn:epic-implement` | Execute every linked feature of an epic in order |
-| Feature | `/agn:feature-create` | Feature file + linked task files |
-| Feature | `/agn:feature-implement` | Execute every open task of a feature in order |
-| Task | `/agn:task-create` | Task or bug ticket in `tasks/backlog/` |
-| Task | `/agn:task-implement` | Execute a single task: detailed design → code → tests |
-| QA | `/agn:qa-integration` | Integration test for a feature, epic boundary, or ad-hoc work |
-| QA | `/agn:qa-system` | Full product system test before release |
+| Verb | Skill | What it does |
+|------|-------|--------------|
+| Define | `/agn:define <product\|epic\|feature\|task>` | Define a work unit at the named tier — vision/spec/requirements (product), epic + linked features (epic), feature + linked tasks (feature), task/bug ticket (task) |
+| Design | `/agn:design <product\|epic\|feature>` | Focused revision of an existing unit's design; product produces `docs/architecture.md`. Epic and feature are placeholders pending the Planner sub-agent. |
+| Plan | `/agn:plan <epic\|feature>` | Focused revision of an existing unit's decomposition. Placeholder pending the Planner sub-agent. |
+| Implement | `/agn:implement <task\|feature\|epic>` | Execute implementation; task = detailed design → code → tests; feature/epic = iterate children with review gates |
+| Validate | `/agn:validate <task\|feature\|epic\|product>` | Quality gates: feature = integration test; product = full system test. Task and epic are placeholders pending the QA sub-agent. |
 
 ### Code and maintenance
 
@@ -59,11 +54,11 @@ The plugin ships 14 skills, namespaced as `/agn:<scope>-<action>`. Skills group 
 
 ## Workflows supported
 
-- **New product** — `/agn:product-define` → `/agn:product-design` → `/agn:epic-create` (or `/agn:feature-create` if no epic tier needed) → `/agn:epic-implement` / `/agn:feature-implement` → `/agn:qa-system`
-- **Bug fix** — `/agn:task-create bug` → `/agn:task-implement` → `/agn:qa-integration` → `/agn:qa-system`
-- **Ad-hoc maintenance** — `/agn:task-create` → `/agn:task-implement` → `/agn:qa-integration`
-- **Incremental feature** — `/agn:feature-create` (against existing product docs) → `/agn:feature-implement` → `/agn:qa-integration`
-- **Codebase optimization** — `/agn:code-review` → `/agn:feature-create` (or `/agn:epic-create` for larger scope) → `/agn:feature-implement` → `/agn:qa-system`
+- **New product** — `/agn:define product` → `/agn:design product` → `/agn:define epic` (or `/agn:define feature` if no epic tier needed) → `/agn:implement epic` / `/agn:implement feature` → `/agn:validate product`
+- **Bug fix** — `/agn:define task bug` → `/agn:implement task` → `/agn:validate feature` → `/agn:validate product`
+- **Ad-hoc maintenance** — `/agn:define task` → `/agn:implement task` → `/agn:validate feature`
+- **Incremental feature** — `/agn:define feature` (against existing product docs) → `/agn:implement feature` → `/agn:validate feature`
+- **Codebase optimization** — `/agn:code-review` → `/agn:define feature` (or `/agn:define epic` for larger scope) → `/agn:implement feature` → `/agn:validate product`
 
 ## taskman.sh — task and feature CLI
 
@@ -132,7 +127,7 @@ Interim mechanism. A planned change will load each rule only when a relevant ski
 ```
 plugins/agn/
 ├── .claude-plugin/plugin.json    # plugin manifest
-├── skills/                       # 14 /agn:* skills
+├── skills/                       # 8 /agn:* skills
 ├── rules/                        # first-principles, task-management, writing-guideline
 ├── scripts/taskman.sh            # task lifecycle CLI
 └── README.md

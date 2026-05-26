@@ -3,7 +3,6 @@ status: backlog
 slug: planner_subagent
 epic: agentic_sdlc_rework
 title: Planner sub-agent for Design + Plan; define and refinement skills delegate
-draft: true
 ---
 
 # Planner sub-agent for Design + Plan; define and refinement skills delegate

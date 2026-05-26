@@ -3,7 +3,6 @@ status: backlog
 slug: qa_subagent_and_validation
 epic: agentic_sdlc_rework
 title: QA sub-agent for system/integration; /agn:validate skills at every level
-draft: true
 ---
 
 # QA sub-agent for system/integration; /agn:validate skills at every level

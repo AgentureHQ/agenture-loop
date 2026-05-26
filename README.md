@@ -29,14 +29,14 @@ Restart Claude Code (or run `/reload-plugins`) and the `/agn:*` skills become av
 Define → Design → Plan → Implement → Test → Launch
 ```
 
-| Phase | What happens | Skills |
-|-------|--------------|--------|
-| **Define** | Vision, product spec, and requirements drafted into `docs/` | `/agn:product-define` |
-| **Design** | High-level architecture derived from the requirements | `/agn:product-design` |
-| **Plan** | Requirements decomposed into work items of the right size | `/agn:epic-create`, `/agn:feature-create`, `/agn:task-create` |
-| **Implement** | Detailed design → code → unit tests, one work item at a time | `/agn:task-implement`, `/agn:feature-implement`, `/agn:epic-implement` |
-| **Test** | Integration coverage at boundaries; full system QA before release | `/agn:qa-integration`, `/agn:qa-system` |
-| **Maintain** | Code review, comments, and commit hygiene across phases | `/agn:code-review`, `/agn:code-comment`, `/agn:code-commit` |
+| Phase | What happens | Skill |
+|-------|--------------|-------|
+| **Define** | Create a work unit: requirements, spec, design, and plan via the Planner sub-agent | `/agn:define <product\|epic\|feature\|task>` |
+| **Design** | Focused revision of an existing unit's design | `/agn:design <product\|epic\|feature>` |
+| **Plan** | Focused revision of an existing unit's decomposition | `/agn:plan <epic\|feature>` |
+| **Implement** | Detailed design → code → unit tests; halts on upstream design gaps | `/agn:implement <epic\|feature\|task>` |
+| **Validate** | Task-level quality gates in main session; feature/epic/product QA via the QA sub-agent | `/agn:validate <task\|feature\|epic\|product>` |
+| **Maintain** | Code review, comments, commits, automated doc sync on closure | `/agn:code-review`, `/agn:code-comment`, `/agn:code-commit`, `/agn:docs-sync` |
 
 The contract is the same at every phase: **you define WHAT and WHY, the agent derives HOW, and a review gate stands between phases.** Specs and plans hold requirements and acceptance criteria — never implementation code. The agent generates implementation from the spec, not from a ticket title or chat history.
 
@@ -58,25 +58,25 @@ Match the entry point to where you are in the lifecycle:
 
 **Greenfield product** — start at Define and walk the full cycle.
 ```
-/agn:product-define           # Define:    vision, spec, requirements → docs/
-/agn:product-design           # Design:    architecture → docs/architecture.md
-/agn:epic-create              # Plan:      epic + linked features
-/agn:epic-implement <slug>    # Implement: iterate features, stop per task for review
-/agn:qa-system                # Test:      full system QA before release
+/agn:define product           # vision + spec + requirements → docs/
+/agn:design product           # architecture → docs/architecture.md
+/agn:define epic              # design + plan for an epic (Planner sub-agent)
+/agn:implement epic <slug>    # iterate features, stop per task for review
+/agn:validate product         # full system QA via QA sub-agent
 ```
 
-**Incremental feature** — docs already exist; enter at Plan.
+**Incremental feature** — docs already exist; enter at Define.
 ```
-/agn:feature-create           # Plan:      feature spec + child tasks
-/agn:feature-implement <slug> # Implement: each task in order
-/agn:qa-integration           # Test:      verify against running app and prior work
+/agn:define feature           # design + plan for the new feature
+/agn:implement feature <slug> # each task in order
+/agn:validate feature         # integration tests via QA sub-agent
 ```
 
-**Single change or bug** — enter at Plan with the smallest work item.
+**Single change or bug** — smallest work item.
 ```
-/agn:task-create              # Plan:      task or bug — requirements only
-/agn:task-implement <path>    # Implement: detailed design → code → tests
-/agn:qa-integration           # Test
+/agn:define task              # task or bug — requirements only
+/agn:implement task <path>    # detailed design → code → tests; halts on upstream design gap
+/agn:validate task            # task-level quality gates (main session)
 ```
 
 You approve every backlog → active → done transition. The agent stops at each gate for review rather than running the whole pipeline unattended. See [plugins/agn/README.md](plugins/agn/README.md) for the full skill reference and the `taskman.sh` lifecycle CLI.

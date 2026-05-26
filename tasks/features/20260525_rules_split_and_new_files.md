@@ -3,7 +3,6 @@ status: backlog
 slug: rules_split_and_new_files
 epic: agentic_sdlc_rework
 title: Split task-management rules; add QA and doc-maintenance rule files
-draft: true
 ---
 
 # Split task-management rules; add QA and doc-maintenance rule files

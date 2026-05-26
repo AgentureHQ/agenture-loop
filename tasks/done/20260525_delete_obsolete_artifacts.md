@@ -1,0 +1,52 @@
+---
+status: done
+kind: task
+feature: unified_skills_and_cleanup
+title: Delete session-load skill and settings.json.disabled
+---
+
+# Delete session-load skill and settings.json.disabled
+
+
+## Problem statement
+
+`plugins/agn/skills/session-load/` and `settings.json.disabled` at the repo root are fossils from the abandoned `stc` agent design. Both confuse readers about what is current.
+
+## Scope
+
+In scope: delete the two artifacts.
+
+Out of scope: deletion of lifecycle skills (covered by `delete_old_lifecycle_skills`).
+
+## Acceptance criteria
+
+- `plugins/agn/skills/session-load/` does not exist.
+- `settings.json.disabled` at repo root does not exist.
+
+## Quality gates
+
+- `./plugins/agn/scripts/taskman.sh validate` exits 0.
+- `test ! -e plugins/agn/skills/session-load` returns true.
+- `test ! -e settings.json.disabled` returns true.
+
+## Summary
+
+### Steps completed
+
+1. Verified both artifacts existed and contents matched the abandoned `stc` design (`settings.json.disabled` held `{"agent": "stc"}`; `session-load/SKILL.md` was the rule-injection probe).
+2. Deleted both with `rm -rf`.
+3. Ran `taskman.sh validate` — passed. Both quality-gate `test ! -e` checks passed.
+
+### Changes made
+
+Deleted:
+- `plugins/agn/skills/session-load/` (directory + `SKILL.md` inside).
+- `settings.json.disabled` (root of repo).
+
+### Notable decisions or deviations
+
+None. Straightforward deletion.
+
+### Links
+
+- N/A.
