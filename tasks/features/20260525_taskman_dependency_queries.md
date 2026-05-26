@@ -1,0 +1,35 @@
+---
+status: backlog
+slug: taskman_dependency_queries
+epic: taskman_python
+title: Ready, blocked-by, blocks dependency-graph queries
+---
+
+# Ready, blocked-by, blocks dependency-graph queries
+
+## Problem statement
+
+Once `depends_on:` exists in the schema, the project manager needs queries to answer "what can I start now?" and "what is blocked on this?" The current `list` command cannot walk the dependency graph.
+
+## Objective
+
+Add three commands that walk the dependency graph defined by `depends_on:` fields:
+
+- `taskman ready` — items whose dependencies are all `done`, sorted by priority then date
+- `taskman blocked-by <slug>` — items the named slug is blocking (i.e. what is waiting on it)
+- `taskman blocks <slug>` — what the named slug is waiting on (its outstanding deps)
+
+## Scope
+
+**In:** Three new query commands, JSON output mode for each, graph traversal logic.
+
+**Out:** Visual dependency graph rendering — reserved for `taskman_web_ui`. Bulk dependency editing.
+
+## Acceptance criteria
+
+1. `taskman ready` returns features and tasks in `backlog/` whose every `depends_on` slug points to a file with `status: done`. Items with empty or absent `depends_on` are included. Sort order: priority ascending, then date.
+2. `taskman blocked-by <slug>` returns items in any non-done state that list `<slug>` in their `depends_on`.
+3. `taskman blocks <slug>` returns the non-done items that `<slug>` lists in its `depends_on`.
+4. All three commands accept `--json` for agent consumption.
+5. All three handle missing or invalid slugs gracefully — emit a warning to stderr, exit with a clear non-zero code.
+6. pytest covers: empty graph, single-edge graph, multi-edge graph, transitive closure, missing slug, cyclic graph (already rejected by validate, but query should not infinite-loop).
