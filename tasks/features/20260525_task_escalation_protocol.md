@@ -1,5 +1,5 @@
 ---
-status: backlog
+status: done
 slug: task_escalation_protocol
 epic: agentic_sdlc_rework
 title: Escalation protocol for upstream design gaps detected during implementation
@@ -36,3 +36,53 @@ Out of scope: automated routing (user manually re-invokes upstream skill); feedb
 - `design_gap_detection_logic`
 - `gap_log_format_and_storage`
 - `escalation_routing_message`
+
+## Summary
+
+### Steps completed
+
+1. Added "Design gap escalation protocol" as a new top-level section in `plugins/agn/skills/implement/SKILL.md`. It owns three things end-to-end: gap-log file format (path, frontmatter, body), routing message (fenced verbatim template), and resume protocol (scan, surface, mark-resolved or re-route).
+2. Reworked the `$0 = task` Execution steps:
+   - **Step 0 (new)** — Resume check before activation, so a task with open gaps isn't bounced through the active folder.
+   - **Step 3 (new)** — Design gap detection after detailed design, before architecture compliance. On any gap, write the log, print the routing message, stop.
+   - Renumbered subsequent steps (Architecture → 4, Execute → 5, Complete → 6, Documentation → 7).
+3. Created `tasks/gaps/` directory with `.gitkeep` so it survives fresh clones.
+4. Updated docs:
+   - `CLAUDE.md` "in flight" section moved from 3-of-6 → 4-of-6 shipped; new exception note in "taskman.sh is the only writer" carves out `tasks/gaps/`.
+   - `plugins/agn/README.md` project layout shows `gaps/` directory.
+   - `docs/agn-specification.md` "in flight" updated to 4-of-6 shipped, 2 remaining.
+
+### Changes made
+
+Created:
+- `tasks/gaps/`
+- `tasks/gaps/.gitkeep`
+
+Modified:
+- `plugins/agn/skills/implement/SKILL.md` (new top-level protocol section + reworked task Execution steps)
+- `CLAUDE.md` (in-flight section + gap-files carve-out)
+- `plugins/agn/README.md` (project layout)
+- `docs/agn-specification.md` (in-flight section)
+
+Task files:
+- 3 tasks created, finalized, executed, closed under `tasks/done/20260526_*.md`.
+
+### Notable decisions or deviations
+
+- **Resume check is step 0, before activation.** Putting it inside step 1 (Activate) would mean a task with an open gap moves backlog → active before being told to wait. Step 0 keeps the lifecycle clean and lets the user re-route without leaving orphan state.
+- **Gap detection lives after detailed design, not before.** A gap is "what design info would I have to guess" — that surfaces only after attempting the design. Earlier detection would catch only obvious gaps.
+- **No `taskman.sh gap` subcommand.** Gaps are append-only observability records — no folder transitions, no lifecycle preconditions, no children. Adding CLI surface would invent invariants where none exist. The Write tool + Edit tool flow is sufficient. Document this as an exception in CLAUDE.md so future readers don't try to add gap commands "for consistency."
+- **Routing message is a fenced verbatim block, not prose.** Implementers see the exact output the skill prints; reduces drift between intent and behavior.
+- **Mark-resolved requires user confirmation.** The skill cannot reliably detect whether an upstream skill actually closed the gap. Forcing user confirmation keeps the trust boundary right.
+- **Filename uses timestamp + slug, not a counter.** Avoids cross-worktree collisions without needing global state; slug makes find-by-task trivial.
+
+### Risk surfaced
+
+The resume protocol scans `tasks/gaps/` by reading YAML `task` field of each file. With many gaps accumulated (long-running project), this scan becomes a per-invocation O(n) overhead. For the immediate feature ship, this is fine — gap files are expected to be rare and short-lived. If the project accumulates hundreds of resolved gaps, consider archiving them or adding an index. Documented here as a foreseeable scaling concern, not blocking.
+
+### Links
+
+- Skill: `plugins/agn/skills/implement/SKILL.md` (Design gap escalation protocol)
+- Storage: `tasks/gaps/`
+- Tasks (all in `tasks/done/20260526_*.md`): `design_gap_detection_logic`, `gap_log_format_and_storage`, `escalation_routing_message`
+- Parent epic: `tasks/epics/20260525_agentic_sdlc_rework.md`

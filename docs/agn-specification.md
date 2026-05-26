@@ -169,19 +169,19 @@ Same overall workflow as new product development, with one difference: Definitio
 
 ### What is in flight
 
-Epic `agentic_sdlc_rework` (see `tasks/epics/`) continues to restructure the plugin to match this specification's recursive SDLC. Three features have shipped:
+Epic `agentic_sdlc_rework` (see `tasks/epics/`) continues to restructure the plugin to match this specification's recursive SDLC. Four features have shipped:
 
 - `unified_skills_and_cleanup` — verb-noun surface live; abandoned fossils from the prior agent design removed.
 - `rules_split_and_new_files` — composition in `rules/task-composition.md`; persistence in `taskman.sh help`; role-specific rule files `rules/qa.md` and `rules/doc-maintenance.md` authored; rule import blocks updated.
 - `planner_subagent` — Planner sub-agent ships at `plugins/agn/agents/planner.md`; `/agn:define`, `/agn:design`, `/agn:plan` delegate composition to it.
+- `task_escalation_protocol` — `/agn:implement task` halts on detected design gaps, writes a gap-log entry to `tasks/gaps/`, prints a routing message, and supports resume after upstream is updated.
 
 Remaining linked features:
 
-1. `task_escalation_protocol` — halt-and-route protocol in `/agn:implement task` for upstream design gaps.
-2. `qa_subagent_and_validation` — QA sub-agent + fills the `/agn:validate task|epic` placeholders.
-3. `docsync_close_hook` — PostClose hook + `/agn:docs-sync` skill.
+1. `qa_subagent_and_validation` — QA sub-agent + fills the `/agn:validate task|epic` placeholders.
+2. `docsync_close_hook` — PostClose hook + `/agn:docs-sync` skill.
 
-The remainder of this document describes the **target** state once those three features ship.
+The remainder of this document describes the **target** state once those two features ship.
 
 
 # Specification and Requirements

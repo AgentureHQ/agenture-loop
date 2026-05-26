@@ -98,6 +98,7 @@ tasks/
   backlog/                        # YYYYMMDD[_NN]_<slug>.md
   active/
   done/
+  gaps/                           # YYYYMMDD-HHMMSS_<task-slug>.md — design-gap escalation log
 ```
 
 Created incrementally as you run each stage — no upfront scaffolding.

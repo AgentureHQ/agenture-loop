@@ -33,6 +33,76 @@ All file moves and status transitions go through [`scripts/taskman.sh`](../../sc
 ./scripts/taskman.sh epic close <slug>              # close epic when all features done
 ```
 
+## Design gap escalation protocol
+
+When `/agn:implement task` detects a meaningful design gap during detailed design (missing scope detail, ambiguous acceptance criterion, undefined interface contract), it halts, writes a gap-log entry, and routes the user to the upstream skill that should address it. This protocol preserves the Design/Implementation separation: implementers do not silently improvise design.
+
+### Gap-log file format
+
+Gap-log files live at `tasks/gaps/<YYYYMMDD-HHMMSS>_<task-slug>.md`. One file per detected gap. Written via the Write tool directly — **not** through `taskman.sh` (gaps are observability records, not lifecycle units).
+
+Frontmatter:
+
+```yaml
+---
+detected: 2026-05-26T15:23:00Z          # ISO 8601 with timezone
+task: <task-slug>
+task_path: tasks/active/YYYYMMDD_<slug>.md
+suspected_level: task | feature | epic | architecture
+status: open | resolved
+---
+```
+
+Body sections (all required):
+
+```markdown
+# Gap: <one-line description>
+
+## Description
+
+<what design information is missing or ambiguous>
+
+## Detection context
+
+<which step of /agn:implement task surfaced this; what the implementer was trying to do at the moment of detection>
+
+## Suspected upstream
+
+<which level needs revision; which skill the user should invoke>
+
+## Resolution
+
+<filled when the gap is marked resolved; left empty initially>
+```
+
+### Routing message
+
+On detection, the skill prints (substitute the actual values):
+
+```
+Design gap detected. Halted before coding.
+
+Gap-log: tasks/gaps/<YYYYMMDD-HHMMSS>_<task-slug>.md
+Suspected upstream: <level>
+Recommended next step: /agn:design <level>     # or /agn:plan <level>, or "edit the task body" for task-level gaps
+
+Re-invoke /agn:implement task <task-path> after the upstream skill closes.
+```
+
+Then stop. Do not proceed to architecture checkpoint or coding. If multiple gaps were detected, write one file per gap and list them all in the message.
+
+### Resume protocol
+
+At the start of every `/agn:implement task` invocation, **before** activation or design work:
+
+1. Scan `tasks/gaps/` for files where YAML `task == <this task slug>` and `status == open`.
+2. If any open gaps exist, surface them to the user with their paths and suspected levels.
+3. Ask: *"Continue (upstream is now addressed — mark gap(s) resolved) or re-route (upstream is still incomplete)?"*
+4. **Mark resolved** — Edit each named gap file via the Edit tool: set `status: resolved`, fill in `## Resolution` with a one-line description of what the upstream skill changed. Then proceed with the normal task flow.
+5. **Re-route** — Reprint the routing message for the still-open gap(s) and stop.
+
+The skill checks resume state even on the first invocation — a prior session may have logged gaps that were never resolved.
+
 ## Dispatch
 
 Read `$0`. Run exactly one of the branches below.
@@ -62,6 +132,8 @@ Read `$0`. Run exactly one of the branches below.
 
 ### Execution steps
 
+0. **Resume check** — Before activation, scan `tasks/gaps/` per the **Design gap escalation protocol** section above. If any open gaps name this task, halt and prompt the user (mark resolved, or re-route). Only proceed past this step when no open gaps remain for this task.
+
 1. **Activate the task**
    - `./scripts/taskman.sh move $1 active` (does the folder move and YAML update atomically).
 
@@ -69,22 +141,27 @@ Read `$0`. Run exactly one of the branches below.
    - Read everything in the required reading list.
    - **Detailed design first** — API shapes, data touched, interfaces, key logic — before any code.
 
-3. **Architecture compliance checkpoint**
+3. **Design gap detection**
+   - Enumerate ambiguities or missing information surfaced during detailed design. For each: what is unclear, and at what tier does the answer belong (`task` body, `feature` scope, `epic` design, or product `architecture`)?
+   - If any gaps exist, follow the **Design gap escalation protocol** above: write one gap-log entry per gap, print the routing message, and stop. Do not proceed to step 4.
+   - If no gaps, continue.
+
+4. **Architecture compliance checkpoint**
    - Verify the detailed design against `docs/architecture.md` constraints.
    - If it violates any constraint, flag to the user before coding — do not proceed until resolved.
 
-4. **Execute**
+5. **Execute**
    - Ask for clarification if the task is ambiguous.
    - For multi-step or risky work, get user approval before executing.
    - Implement, then write unit tests as appropriate.
    - Stay within task scope; flag scope creep.
 
-5. **Complete (after user confirms)**
+6. **Complete (after user confirms)**
    - Append a `## Summary` section to the task file describing steps completed, changes made, notable decisions, links.
    - `./scripts/taskman.sh move <active-path> done`.
    - If the task had `feature: <slug>` and this was the last open task, offer to run `./scripts/taskman.sh feature close <slug>`.
 
-6. **Documentation** — If behavior or intent in docs is wrong or incomplete, update `docs/*` (dependency order: vision → spec → requirements → architecture → tasks).
+7. **Documentation** — If behavior or intent in docs is wrong or incomplete, update `docs/*` (dependency order: vision → spec → requirements → architecture → tasks).
 
 ### After single-task flows (bugfix / ad-hoc)
 When the user expects integration coverage, run **`/agn:validate feature`** for the affected scope before hand-off. Full regression uses **`/agn:validate product`**.
