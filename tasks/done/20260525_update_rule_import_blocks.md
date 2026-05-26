@@ -1,0 +1,66 @@
+---
+status: done
+kind: task
+feature: rules_split_and_new_files
+title: Update CLAUDE.md and README rule-import blocks to reference new rule files
+---
+
+# Update CLAUDE.md and README rule-import blocks to reference new rule files
+
+
+## Problem statement
+
+Once `rules/task-management.md` is split into `rules/task-composition.md` (composition) and `taskman.sh help` (persistence), and `rules/qa.md` plus `rules/doc-maintenance.md` are authored, the `@`-import block in this repo's `CLAUDE.md` and the example block in `plugins/agn/README.md` will reference a deleted file (`task-management.md`) and miss three new ones. Users importing the old set will see broken `@`-imports; users importing the example block will not pull the new role-specific rules.
+
+## Scope
+
+In scope: update `CLAUDE.md` (this repo) and `plugins/agn/README.md` (example for users of the plugin) so the `@`-import blocks reference `first-principles.md`, `task-composition.md`, `qa.md`, `doc-maintenance.md`, `writing-guideline.md` — not `task-management.md`.
+
+Out of scope: the rule files themselves (covered by sibling tasks).
+
+## Acceptance criteria
+
+- This repo's `CLAUDE.md` `@`-imports only files that exist.
+- `plugins/agn/README.md` example rule-import block references the new rule files.
+- `grep -rn task-management.md` in the four updated docs (CLAUDE.md, README.md, docs/agn-specification.md, plugins/agn/README.md) returns no hits.
+
+## Quality gates
+
+- `./plugins/agn/scripts/taskman.sh validate` exits 0.
+- Manual review confirms the import block is the same in both files modulo the path prefix.
+
+## Summary
+
+### Steps completed
+
+1. Grepped `task-management.md` across the four docs — 10 hits across CLAUDE.md (3), plugins/agn/README.md (4), docs/agn-specification.md (3). README.md was already clean.
+2. Updated `plugins/agn/README.md`:
+   - Replaced the 3-file `@`-import example with a 5-file block (`first-principles`, `task-composition`, `writing-guideline`, `qa`, `doc-maintenance`) and noted what each rule does.
+   - Replaced the "See `rules/task-management.md`" pointer with a split pointer to `task-composition.md` + `./scripts/taskman.sh help`.
+   - Removed the "interim mechanism" note (the split it referenced has shipped).
+   - Updated the plugin-layout tree comment to list all five rules.
+3. Updated `CLAUDE.md`:
+   - Rewrote the "rule files referenced as project instructions" line to list the new 5-file set + the persistence-via-help note.
+   - Rewrote the "See `task-management.md`" pointer to split between `task-composition.md` and `taskman.sh help`.
+   - Refreshed the "Architecture rework in flight" line to reflect 2 features shipped + 4 remaining.
+4. Updated `docs/agn-specification.md`:
+   - Swapped the `task-management.md` references to `task-composition.md` + `taskman.sh help`.
+   - Expanded the "Rules" bullet in "What ships today" to list all five rule files.
+   - Refreshed the "What is in flight" section: 2 shipped (unified_skills_and_cleanup, rules_split_and_new_files); 4 remaining.
+5. Re-ran the grep: zero hits. Quality gate met.
+
+### Changes made
+
+Modified:
+- `plugins/agn/README.md` (3 edits — import block, "See `rules/...`", layout tree)
+- `CLAUDE.md` (3 edits — rule files line, "See" pointer, in-flight section)
+- `docs/agn-specification.md` (3 edits — line 60 pointer, "Rules" bullet, in-flight section)
+
+### Notable decisions or deviations
+
+- **CLAUDE.md's foundational @-import unchanged.** Line 7 still only imports `first-principles.md`. The other rules are role-specific (composition, writing, QA, doc-maintenance) and don't belong in an "always follow" block. The 5-file import block is documented as an option for user projects in plugins/agn/README.md, not enforced here.
+- **Removed the "Interim mechanism" footnote** rather than rewording it. Its premise — that loading would later become skill-conditional via the `split_task_management_rules` task — is now reality on the rules side. The remaining "load only when relevant" goal applies to sub-agents (Planner, QA), which sibling features deliver.
+
+### Links
+
+- `plugins/agn/README.md`, `CLAUDE.md`, `docs/agn-specification.md`

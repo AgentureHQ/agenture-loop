@@ -28,7 +28,7 @@ product → epic → feature → task
 
 Bugs are tasks with `kind: bug`. Same lifecycle. Can be attached to a feature or ad-hoc.
 
-See `rules/task-management.md` for the full model.
+See `rules/task-composition.md` for the body and frontmatter model; see `./scripts/taskman.sh help` for the persistence model (storage, naming, lifecycle).
 
 ## Skills
 
@@ -108,19 +108,23 @@ Plugins do not auto-load `rules/`. To activate the behavioral rules in your proj
 
 ```
 @~/.claude/plugins/cache/agenture/agn/0.1.0/rules/first-principles.md
-@~/.claude/plugins/cache/agenture/agn/0.1.0/rules/task-management.md
+@~/.claude/plugins/cache/agenture/agn/0.1.0/rules/task-composition.md
 @~/.claude/plugins/cache/agenture/agn/0.1.0/rules/writing-guideline.md
+@~/.claude/plugins/cache/agenture/agn/0.1.0/rules/qa.md
+@~/.claude/plugins/cache/agenture/agn/0.1.0/rules/doc-maintenance.md
 ```
 
 Update the version (`0.1.0`) when you upgrade the plugin.
 
-The three files:
+The five files:
 
-- `first-principles.md` — design discipline (YAGNI, KISS, DRY), surgical changes, goal-driven execution.
-- `task-management.md` — epic/feature/task hierarchy, lifecycle, frontmatter shapes.
-- `writing-guideline.md` — crisp, no-fluff prose style.
+- `first-principles.md` — design discipline (YAGNI, KISS, DRY), surgical changes, goal-driven execution. Always-on.
+- `task-composition.md` — epic/feature/task frontmatter shapes, body section requirements, completion-summary template. Loaded by any skill that composes work units.
+- `writing-guideline.md` — crisp, no-fluff prose style. Loaded by document-writing skills.
+- `qa.md` — QA mindset, role separation, validation principles. Loaded by the QA sub-agent and `/agn:validate` skills.
+- `doc-maintenance.md` — what to check after a work unit closes. Loaded by the docs-sync skill / PostClose hook.
 
-Interim mechanism. A planned change will load each rule only when a relevant skill runs (tracked in backlog: `split_task_management_rules`).
+Persistence rules (storage layout, naming, lifecycle preconditions, CLI surface, validation behavior) live in `./scripts/taskman.sh help` — the script is the single writer and the authoritative reference.
 
 ## Plugin layout
 
@@ -128,7 +132,7 @@ Interim mechanism. A planned change will load each rule only when a relevant ski
 plugins/agn/
 ├── .claude-plugin/plugin.json    # plugin manifest
 ├── skills/                       # 8 /agn:* skills
-├── rules/                        # first-principles, task-management, writing-guideline
-├── scripts/taskman.sh            # task lifecycle CLI
+├── rules/                        # first-principles, task-composition, writing-guideline, qa, doc-maintenance
+├── scripts/taskman.sh            # task lifecycle CLI (also: persistence reference via `help`)
 └── README.md
 ```

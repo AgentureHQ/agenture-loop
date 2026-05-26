@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture rework in flight
 
-Epic `agentic_sdlc_rework` (see `tasks/epics/`) is partly delivered. Feature `unified_skills_and_cleanup` is closing — the verb-noun skill surface (`/agn:define|design|plan|implement|validate <level>`) is live. Five features remain in flight: `rules_split_and_new_files` (split task-management rules; persistence moves to `taskman.sh help`), `planner_subagent` (level-aware Planner for Design + Plan), `task_escalation_protocol` (halt-and-route for upstream design gaps), `qa_subagent_and_validation` (QA sub-agent for feature/epic/product), and `docsync_close_hook` (PostClose hook + `/agn:docs-sync`). Until those ship, the Planner and QA sub-agents are placeholders inside the unified skills, and doc sync remains manual.
+Epic `agentic_sdlc_rework` (see `tasks/epics/`) is partly delivered. Two features have shipped: `unified_skills_and_cleanup` (the verb-noun skill surface `/agn:define|design|plan|implement|validate <level>` is live) and `rules_split_and_new_files` (composition rules in `rules/task-composition.md`; persistence in `taskman.sh help`; new role-specific rule files `rules/qa.md` and `rules/doc-maintenance.md`). Four features remain in flight: `planner_subagent` (level-aware Planner for Design + Plan), `task_escalation_protocol` (halt-and-route for upstream design gaps), `qa_subagent_and_validation` (QA sub-agent for feature/epic/product), and `docsync_close_hook` (PostClose hook + `/agn:docs-sync`). Until those ship, the Planner and QA sub-agents are placeholders inside the unified skills, and doc sync remains manual.
 
 ## What this repo is
 
@@ -30,7 +30,7 @@ The repo runs its own plugin via symlinks under `.claude/`:
 
 Consequences:
 - `/agn:*` skills are loaded automatically when Claude Code opens this repo — no `/plugin install` needed during local development.
-- The rule files referenced as project instructions (`rules/first-principles.md`, `rules/task-management.md`, `rules/writing-guideline.md`) live at `plugins/agn/rules/` and are exposed at `.claude/rules/`. Edit them in `plugins/agn/rules/`; the `.claude/rules` path is a symlink.
+- The rule files (`rules/first-principles.md`, `rules/task-composition.md`, `rules/writing-guideline.md`, `rules/qa.md`, `rules/doc-maintenance.md`) live at `plugins/agn/rules/` and are exposed at `.claude/rules/`. Edit them in `plugins/agn/rules/`; the `.claude/rules` path is a symlink. Persistence rules (storage, naming, lifecycle) live in `./plugins/agn/scripts/taskman.sh help`, not in any rule file.
 - When editing a skill, edit `plugins/agn/skills/<skill>/SKILL.md`, not the symlinked copy.
 
 ## taskman.sh is the only writer for task state
@@ -81,7 +81,7 @@ File locations:
 
 Slug format: `[a-z][a-z0-9_]*` — lowercase, underscores only, no hyphens or dots.
 
-See `plugins/agn/rules/task-management.md` for the full model (frontmatter shapes, body sections, lifecycle preconditions, mandatory `## Summary` on close).
+See `plugins/agn/rules/task-composition.md` for frontmatter shapes, body sections, and the mandatory `## Summary` template. See `./plugins/agn/scripts/taskman.sh help` for storage layout, naming, lifecycle preconditions, and validation behavior.
 
 ## Editing skills
 

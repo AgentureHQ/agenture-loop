@@ -1,5 +1,5 @@
 ---
-status: backlog
+status: done
 kind: task
 feature: rules_split_and_new_files
 title: Split task-management.md into composition rules + persistence in taskman.sh help
@@ -36,3 +36,33 @@ Out of scope:
 
 - `./plugins/agn/scripts/taskman.sh validate` passes.
 - Manual review: open `rules/task-composition.md` and confirm only composition content; confirm no persistence-related sections remain.
+
+## Summary
+
+### Steps completed
+
+1. Verified persistence content already migrated to `taskman.sh help` by the sibling task `migrate_persistence_to_taskman_help` (closed earlier this feature).
+2. Composed `plugins/agn/rules/task-composition.md` with the composition halves of the original file: Concepts, YAML frontmatter shapes (epic/feature/task), Body structure (required + recommended sections per kind), Completion summary template.
+3. Deleted `plugins/agn/rules/task-management.md`.
+4. Listed `plugins/agn/rules/` — confirmed 5 files: `first-principles`, `writing-guideline`, `task-composition`, `qa`, `doc-maintenance`.
+5. Ran `taskman.sh validate` — passed.
+
+### Changes made
+
+Created `plugins/agn/rules/task-composition.md` (~95 lines).
+Deleted `plugins/agn/rules/task-management.md`.
+
+### Notable decisions or deviations
+
+- **Pointer back to persistence is in the file's opening sentence** rather than in a separate "See also" footer. Reader hitting the composition rules immediately knows where persistence lives: `./scripts/taskman.sh help`. Keeps the cross-reference unmissable.
+- **Migration section dropped, not split.** The original's "Migration" section explained legacy file handling — that is persistence behavior, already covered under VALIDATION BEHAVIOR in `taskman.sh help`. Removed here entirely; not duplicated.
+- **Approval and Git-relationship sections dropped** for the same reason — both live in `taskman.sh help` now.
+
+### Risk surfaced
+
+This repo's `CLAUDE.md` does NOT explicitly `@`-import `task-management.md`, so the live session is not broken by the deletion. However, the plugin's README still recommends importing `task-management.md` in user projects. Sibling task `update_rule_import_blocks` will fix the README example.
+
+### Links
+
+- `plugins/agn/rules/task-composition.md`
+- `plugins/agn/rules/` (5 files post-split)

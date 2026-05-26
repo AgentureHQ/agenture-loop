@@ -900,45 +900,107 @@ cmd_validate() {
 usage() {
   cat <<'EOF'
 Taskman — epic, feature, and task management CLI.
+Authoritative reference for both the CLI surface and the persistence model.
 
-Usage:
+================================================================================
+COMMANDS
+================================================================================
+
+USAGE
   ./scripts/taskman.sh <command> [options]
 
-Creation (body on stdin; required sections enforced unless --no-validate):
+CREATION  (body on stdin; required sections enforced unless --no-validate)
   new epic    --slug <s> --title "<t>" [--no-validate]
   new feature --slug <s> --title "<t>" [--epic <s>] [--no-validate]
   new task    --title "<t>" [--feature <s>] [--kind task|bug] [--slug <s>]
               [--no-validate]
 
-Files created by `new` carry `draft: true` in their YAML header. The
-authoring skill re-reads the file, previews it, and then either:
+  Files created by `new` carry `draft: true` in their YAML header. The
+  authoring skill re-reads the file, previews it, and then either:
 
-  finalize <path>       # clear `draft: true` after the user approves
-  discard  <path>       # delete the draft after the user rejects
+    finalize <path>       # clear `draft: true` after the user approves
+    discard  <path>       # delete the draft after the user rejects
 
-Lifecycle (tasks only — epics and features change state via close):
+LIFECYCLE  (tasks only — epics and features change state via close)
   move <task-path> <backlog|active|done>
 
-Listing:
+LISTING
   list epics    [--status backlog|active|done]
   list features [--epic <s>] [--status backlog|active|done]
   list tasks    [--feature <s>] [--status backlog|active|done] [--kind task|bug]
 
-Epics:
+EPICS
   epic show     <slug>
   epic close    <slug>        # fails unless all member features in done
 
-Features:
+FEATURES
   feature show  <slug>
   feature close <slug>        # fails unless all member tasks in done
 
-Integrity:
+INTEGRITY
   validate                    # lint all YAML headers, check orphans
 
-Environment:
-  TASKMAN_TASKS_DIR   Override tasks dir (default: <repo>/tasks)
+ENVIRONMENT
+  TASKMAN_TASKS_DIR           Override tasks dir (default: <repo>/tasks)
 
-See: rules/task-management.md
+================================================================================
+PERSISTENCE MODEL
+================================================================================
+
+STORAGE LAYOUT
+  tasks/
+    epics/             # epic files — flat folder; status field tracks state
+      YYYYMMDD_<slug>.md
+    features/          # feature files — flat folder; status field tracks state
+      YYYYMMDD_<slug>.md
+    backlog/           # task lifecycle subfolders
+    active/
+    done/
+
+  Epic and feature files do NOT move between folders. Their lifecycle lives
+  in the `status` YAML field.
+
+  Task files move between backlog/, active/, done/ as they transition. The
+  folder is the source of truth; the `status` YAML field must agree.
+
+NAMING
+  Epic file:    YYYYMMDD_<slug>.md       # creation date + slug
+  Feature file: YYYYMMDD_<slug>.md       # creation date + slug
+  Task file:    YYYYMMDD[_NN]_<slug>.md  # _NN added on same-day collisions
+
+  Slug format:  [a-z][a-z0-9_]*          # lowercase, underscores only
+                                         # no hyphens, no dots, no leading digit
+
+LIFECYCLE PRECONDITIONS
+  Task:    backlog → active → done   (set via `move`)
+  Feature: backlog → active → done   (close enforces all member tasks done)
+  Epic:    backlog → active → done   (close enforces all member features done)
+
+  Intermediate transitions (backlog → active) have no mechanical
+  precondition. Set by the initiator.
+
+  A `## Summary` section MUST be appended to a task, feature, or epic file
+  before it moves to `done`. Closure without a summary loses audit trail
+  for future work in the same area.
+
+VALIDATION BEHAVIOR
+  `validate` lints all YAML headers and checks orphan references.
+  Legacy / stale references (e.g., `feature: <slug>` pointing at a
+  feature that no longer exists) are downgraded to WARNINGS — pre-rule
+  files are implicitly ad-hoc; no retroactive rewrite required.
+
+APPROVAL
+  Human-initiated work: human approves backlog → active and active → done.
+  Agent-initiated work: agent approves after validation and notification
+  of the product owner.
+
+RELATIONSHIP TO GIT
+  A feature is the natural unit of a git worktree:
+    one feature slug → one branch → one isolated dev stack.
+  Epics span multiple worktrees. Operational convention, not enforced
+  by taskman.
+
+See: rules/task-composition.md   # frontmatter shapes, body sections, summary template
 EOF
 }
 

@@ -57,7 +57,7 @@ Documentation evolves continuously. Each completed unit triggers automatic revie
 
 - **Plan (Decomposition)**
 
-    - **Objective**: decompose the product into a four-tier hierarchy — **product → epic → feature → task** — that gives implementation agents executable units of work and the user a clear view of scope and sequencing. Epics are functional-block-sized initiatives. Features are coherent slices within an epic (or stand-alone if no epic tier is needed). Tasks are the units of implementation work. Each tier is optional one level up. See `rules/task-management.md` for details on how each tier is defined and managed.
+    - **Objective**: decompose the product into a four-tier hierarchy — **product → epic → feature → task** — that gives implementation agents executable units of work and the user a clear view of scope and sequencing. Epics are functional-block-sized initiatives. Features are coherent slices within an epic (or stand-alone if no epic tier is needed). Tasks are the units of implementation work. Each tier is optional one level up. See `rules/task-composition.md` for the body and frontmatter shape of each tier; see `./scripts/taskman.sh help` for the persistence model (storage, naming, lifecycle).
     - **Inputs**: specs, requirements, architecture.
     - **Outputs**: epic files (`tasks/epics/`), feature files (`tasks/features/`), task files (`tasks/backlog/`). The hierarchy is the plan — there is no separate implementation-plan document.
     - **How it is done**:
@@ -163,20 +163,24 @@ Same overall workflow as new product development, with one difference: Definitio
   - `/agn:implement <task|feature|epic>` — execute implementation; task = detailed design → code → tests; feature/epic = iterate children.
   - `/agn:validate <task|feature|epic|product>` — quality gates. Feature and product are fully implemented; task and epic are placeholders pending `qa_subagent_and_validation`.
 - **Tool skills:** `/agn:code-review`, `/agn:code-comment`, `/agn:code-commit`.
-- **Rules** in `rules/first-principles.md`, `rules/task-management.md`, `rules/writing-guideline.md`. Loaded into a user's project by `@`-importing them in the project's `CLAUDE.md`.
+- **Rules** in `rules/first-principles.md` (always-on design discipline), `rules/task-composition.md` (frontmatter and body shapes), `rules/writing-guideline.md` (prose style), `rules/qa.md` (validation principles), `rules/doc-maintenance.md` (closure-time doc checks). Loaded into a user's project by `@`-importing them in the project's `CLAUDE.md`. Persistence rules live in `./scripts/taskman.sh help`.
 - **Tooling:** `scripts/taskman.sh` — single writer for create / move / close / list operations on epics, features, and tasks.
 
 ### What is in flight
 
-Epic `agentic_sdlc_rework` (see `tasks/epics/`) continues to restructure the plugin to match this specification's recursive SDLC. Feature `unified_skills_and_cleanup` is closing — the verb-noun surface above is live, and abandoned fossils from the prior agent design have been removed. Remaining linked features:
+Epic `agentic_sdlc_rework` (see `tasks/epics/`) continues to restructure the plugin to match this specification's recursive SDLC. Two features have shipped:
 
-1. `rules_split_and_new_files` — split `task-management.md` into composition + persistence concerns; add `qa.md` and `doc-maintenance.md`.
-2. `planner_subagent` — one level-aware Planner sub-agent for Design + Plan; replaces the design/plan placeholders.
-3. `task_escalation_protocol` — halt-and-route protocol in `/agn:implement task` for upstream design gaps.
-4. `qa_subagent_and_validation` — QA sub-agent + fills the `/agn:validate task|epic` placeholders.
-5. `docsync_close_hook` — PostClose hook + `/agn:docs-sync` skill.
+- `unified_skills_and_cleanup` — verb-noun surface live; abandoned fossils from the prior agent design removed.
+- `rules_split_and_new_files` — composition in `rules/task-composition.md`; persistence in `taskman.sh help`; role-specific rule files `rules/qa.md` and `rules/doc-maintenance.md` authored; rule import blocks updated.
 
-The remainder of this document describes the **target** state once those five features ship.
+Remaining linked features:
+
+1. `planner_subagent` — one level-aware Planner sub-agent for Design + Plan; replaces the design/plan placeholders.
+2. `task_escalation_protocol` — halt-and-route protocol in `/agn:implement task` for upstream design gaps.
+3. `qa_subagent_and_validation` — QA sub-agent + fills the `/agn:validate task|epic` placeholders.
+4. `docsync_close_hook` — PostClose hook + `/agn:docs-sync` skill.
+
+The remainder of this document describes the **target** state once those four features ship.
 
 
 # Specification and Requirements
