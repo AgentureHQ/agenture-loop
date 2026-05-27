@@ -15,6 +15,80 @@ Add the marketplace to Claude Code once, then install any plugin from it:
 
 Restart Claude Code (or run `/reload-plugins`) and the `/agn:*` skills become available.
 
+## The Agenture SDLC
+
+Four-tier work hierarchy — a product breaks into epics, epics into features, features into tasks:
+
+```mermaid
+graph TD
+    P[Product]
+
+    P --> E1[Epic A]
+    P --> E2[Epic B]
+    P --> F3[Feature C]
+    P --> T7[Task]
+
+    E1 --> F1[Feature A1]
+    E1 --> F2[Feature A2]
+    E2 --> F4[Feature B1]
+
+    F1 --> T1[Task]
+    F1 --> T2[Task]
+    F2 --> T3[Task]
+    F4 --> T4[Task]
+    F4 --> T5[Task]
+    F3 --> T6[Task]
+```
+
+A product holds many epics, an epic many features, a feature many tasks. The hierarchy is open, not fixed: every level is optional one up. **Feature C** has no parent epic, and the top-level **Task** is ad-hoc — no parent feature or epic.
+
+The lifecycle runs **define → design → plan → implement → validate**, plus maintenance skills. Each stage and the skill that drives it:
+
+### 1. Define — *what & why*
+`/agn:define <level>` where `<level>` ∈ `product | epic | feature | task`
+- **product** → vision / spec / requirements in `docs/`
+- **epic** → an epic file + its linked feature files
+- **feature** → a feature file + its linked task files
+- **task** → a single task or bug ticket in `tasks/backlog/`
+
+Produces requirements (WHAT/WHY) — never implementation detail.
+
+### 2. Design — *architecture*
+`/agn:design <level>` where `<level>` ∈ `product | epic | feature`
+- **product** drafts `docs/architecture.md` in-session
+- **epic/feature** refine that unit's design in place
+
+### 3. Plan — *decomposition*
+`/agn:plan <level>` — revises how a unit breaks down: an epic into features, or a feature into tasks. Plan-only; writes no code.
+
+### 4. Implement — *code & tests*
+`/agn:implement <level> <id>`
+- **task** (takes a file path) → detailed design → code → tests
+- **feature** (takes a slug) → runs every open task in order
+- **epic** (takes a slug) → runs every linked feature in order
+
+### 5. Validate — *quality gates*
+`/agn:validate <level>` ∈ `task | feature | epic | product` — runs the gates for that tier before it can close.
+
+### Maintenance (anytime)
+- `/agn:code-review` — read-only audit, emits backlog tasks
+- `/agn:code-commit` — staged, well-formed commit
+- `/agn:code-comment` — add explanatory comments
+- `/agn:docs-sync` — reconcile docs after a unit closes
+
+### State is managed by `taskman.sh`
+Skills compose content in dialog, then hand off to `./scripts/taskman.sh` as the save step. Files move `backlog → active → done`; a feature can't close until all its tasks are `done`, an epic until all its features are `done`.
+
+### Common paths
+
+| Goal | Sequence |
+|------|----------|
+| **New product** | `define product` → `design product` → `define epic` (or `feature`) → `implement` → `validate` → `docs-sync` |
+| **Incremental feature** (docs exist) | `define feature` → `plan feature` → `implement feature` → `validate feature` → `docs-sync` |
+| **Bug fix** | `define task` (kind bug) → `implement task` → `validate task` |
+| **Ad-hoc maintenance** | `define task` → `implement task` → `validate task` |
+| **Optimization** | `code-review` → `define feature` → `implement` → `validate` |
+
 ## Available plugins
 
 | Plugin | What it does | Docs |
