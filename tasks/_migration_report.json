@@ -1,0 +1,238 @@
+{
+  "backlog/20260525_feedback_loop_infrastructure.md": {
+    "new_id": "260525000",
+    "new_path": "backlog/00.task-260525000.backlog.feedback_loop_infrastructure.md"
+  },
+  "done/20260525_create_doc_maintenance_rules.md": {
+    "new_id": "260525001",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525016.done.rules_split_and_new_files/00.task-260525001.done.create_doc_maintenance_rules.md"
+  },
+  "done/20260525_create_qa_rules.md": {
+    "new_id": "260525002",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525016.done.rules_split_and_new_files/00.task-260525002.done.create_qa_rules.md"
+  },
+  "done/20260525_create_unified_lifecycle_skills.md": {
+    "new_id": "260525003",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525024.done.unified_skills_and_cleanup/00.task-260525003.done.create_unified_lifecycle_skills.md"
+  },
+  "done/20260525_delete_obsolete_artifacts.md": {
+    "new_id": "260525004",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525024.done.unified_skills_and_cleanup/00.task-260525004.done.delete_obsolete_artifacts.md"
+  },
+  "done/20260525_delete_old_lifecycle_skills.md": {
+    "new_id": "260525005",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525024.done.unified_skills_and_cleanup/00.task-260525005.done.delete_old_lifecycle_skills.md"
+  },
+  "done/20260525_migrate_persistence_to_taskman_help.md": {
+    "new_id": "260525006",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525016.done.rules_split_and_new_files/00.task-260525006.done.migrate_persistence_to_taskman_help.md"
+  },
+  "done/20260525_split_task_management_rules.md": {
+    "new_id": "260525007",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525016.done.rules_split_and_new_files/00.task-260525007.done.split_task_management_rules.md"
+  },
+  "done/20260525_switch_docs_to_new_skill_names.md": {
+    "new_id": "260525008",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525024.done.unified_skills_and_cleanup/00.task-260525008.done.switch_docs_to_new_skill_names.md"
+  },
+  "done/20260525_update_rule_import_blocks.md": {
+    "new_id": "260525009",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525016.done.rules_split_and_new_files/00.task-260525009.done.update_rule_import_blocks.md"
+  },
+  "done/20260525_verify_skill_arg_routing.md": {
+    "new_id": "260525010",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525024.done.unified_skills_and_cleanup/00.task-260525010.done.verify_skill_arg_routing.md"
+  },
+  "done/20260526_create_design_skill.md": {
+    "new_id": "260526000",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525014.done.planner_subagent/00.task-260526000.done.create_design_skill.md"
+  },
+  "done/20260526_create_docs_sync_skill.md": {
+    "new_id": "260526001",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525013.done.docsync_close_hook/00.task-260526001.done.create_docs_sync_skill.md"
+  },
+  "done/20260526_create_plan_skill.md": {
+    "new_id": "260526002",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525014.done.planner_subagent/00.task-260526002.done.create_plan_skill.md"
+  },
+  "done/20260526_create_planner_subagent.md": {
+    "new_id": "260526003",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525014.done.planner_subagent/00.task-260526003.done.create_planner_subagent.md"
+  },
+  "done/20260526_create_qa_subagent.md": {
+    "new_id": "260526004",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525015.done.qa_subagent_and_validation/00.task-260526004.done.create_qa_subagent.md"
+  },
+  "done/20260526_create_validate_feature_epic_product_skills.md": {
+    "new_id": "260526005",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525015.done.qa_subagent_and_validation/00.task-260526005.done.create_validate_feature_epic_product_skills.md"
+  },
+  "done/20260526_create_validate_task_skill.md": {
+    "new_id": "260526006",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525015.done.qa_subagent_and_validation/00.task-260526006.done.create_validate_task_skill.md"
+  },
+  "done/20260526_design_gap_detection_logic.md": {
+    "new_id": "260526007",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525017.done.task_escalation_protocol/00.task-260526007.done.design_gap_detection_logic.md"
+  },
+  "done/20260526_design_postclose_hook.md": {
+    "new_id": "260526008",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525013.done.docsync_close_hook/00.task-260526008.done.design_postclose_hook.md"
+  },
+  "done/20260526_escalation_routing_message.md": {
+    "new_id": "260526009",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525017.done.task_escalation_protocol/00.task-260526009.done.escalation_routing_message.md"
+  },
+  "done/20260526_gap_log_format_and_storage.md": {
+    "new_id": "260526010",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525017.done.task_escalation_protocol/00.task-260526010.done.gap_log_format_and_storage.md"
+  },
+  "done/20260526_handle_no_active_session_fallback.md": {
+    "new_id": "260526011",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525013.done.docsync_close_hook/00.task-260526011.done.handle_no_active_session_fallback.md"
+  },
+  "done/20260526_migrate_qa_skills_logic.md": {
+    "new_id": "260526012",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525015.done.qa_subagent_and_validation/00.task-260526012.done.migrate_qa_skills_logic.md"
+  },
+  "done/20260526_refactor_define_skills_to_delegate.md": {
+    "new_id": "260526013",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525014.done.planner_subagent/00.task-260526013.done.refactor_define_skills_to_delegate.md"
+  },
+  "done/20260527_tm_convert_command.md": {
+    "new_id": "260527000",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core/00.task-260527000.done.tm_convert_command.md"
+  },
+  "done/20260527_tm_depends_on_validation.md": {
+    "new_id": "260527001",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527015.done.schema_dependencies/00.task-260527001.done.tm_depends_on_validation.md"
+  },
+  "done/20260527_tm_migrate_command.md": {
+    "new_id": "260527002",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527014.done.legacy_migration/00.task-260527002.done.tm_migrate_command.md"
+  },
+  "done/20260527_tm_model_primitives.md": {
+    "new_id": "260527003",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core/00.task-260527003.done.tm_model_primitives.md"
+  },
+  "done/20260527_tm_move_command.md": {
+    "new_id": "260527004",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core/00.task-260527004.done.tm_move_command.md"
+  },
+  "done/20260527_tm_new_command.md": {
+    "new_id": "260527005",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core/00.task-260527005.done.tm_new_command.md"
+  },
+  "done/20260527_tm_query_commands.md": {
+    "new_id": "260527006",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527013.done.dependency_queries/00.task-260527006.done.tm_query_commands.md"
+  },
+  "done/20260527_tm_read_and_close_commands.md": {
+    "new_id": "260527007",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core/00.task-260527007.done.tm_read_and_close_commands.md"
+  },
+  "done/20260527_tm_scaffolding.md": {
+    "new_id": "260527008",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core/00.task-260527008.done.tm_scaffolding.md"
+  },
+  "done/20260527_tm_search_command.md": {
+    "new_id": "260527009",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527016.done.search/00.task-260527009.done.tm_search_command.md"
+  },
+  "done/20260527_tm_ui_command.md": {
+    "new_id": "260527010",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527017.done.web_ui/00.task-260527010.done.tm_ui_command.md"
+  },
+  "done/20260527_tm_validate_command.md": {
+    "new_id": "260527011",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core/00.task-260527011.done.tm_validate_command.md"
+  },
+  "done/20260527_tm_worktree_status_command.md": {
+    "new_id": "260527012",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527019.done.worktree_status/00.task-260527012.done.tm_worktree_status_command.md"
+  },
+  "epics/20260525_agentic_sdlc_rework.md": {
+    "new_id": "260525011",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework"
+  },
+  "epics/20260525_taskman_python.md": {
+    "new_id": "260525012",
+    "new_path": "done/00.epic-260525012.done.taskman_python"
+  },
+  "features/20260525_docsync_close_hook.md": {
+    "new_id": "260525013",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525013.done.docsync_close_hook"
+  },
+  "features/20260525_planner_subagent.md": {
+    "new_id": "260525014",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525014.done.planner_subagent"
+  },
+  "features/20260525_qa_subagent_and_validation.md": {
+    "new_id": "260525015",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525015.done.qa_subagent_and_validation"
+  },
+  "features/20260525_rules_split_and_new_files.md": {
+    "new_id": "260525016",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525016.done.rules_split_and_new_files"
+  },
+  "features/20260525_task_escalation_protocol.md": {
+    "new_id": "260525017",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525017.done.task_escalation_protocol"
+  },
+  "features/20260525_taskman_dependency_queries.md": {
+    "new_id": "260525018",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260525018.done.taskman_dependency_queries.md"
+  },
+  "features/20260525_taskman_python_core.md": {
+    "new_id": "260525019",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260525019.done.taskman_python_core.md"
+  },
+  "features/20260525_taskman_schema_extensions.md": {
+    "new_id": "260525020",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260525020.done.taskman_schema_extensions.md"
+  },
+  "features/20260525_taskman_search_and_dedup.md": {
+    "new_id": "260525021",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260525021.done.taskman_search_and_dedup.md"
+  },
+  "features/20260525_taskman_web_ui.md": {
+    "new_id": "260525022",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260525022.done.taskman_web_ui.md"
+  },
+  "features/20260525_taskman_worktree_status.md": {
+    "new_id": "260525023",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260525023.done.taskman_worktree_status.md"
+  },
+  "features/20260525_unified_skills_and_cleanup.md": {
+    "new_id": "260525024",
+    "new_path": "done/00.epic-260525011.done.agentic_sdlc_rework/00.feat-260525024.done.unified_skills_and_cleanup"
+  },
+  "features/20260527_dependency_queries.md": {
+    "new_id": "260527013",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527013.done.dependency_queries"
+  },
+  "features/20260527_legacy_migration.md": {
+    "new_id": "260527014",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527014.done.legacy_migration"
+  },
+  "features/20260527_schema_dependencies.md": {
+    "new_id": "260527015",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527015.done.schema_dependencies"
+  },
+  "features/20260527_search.md": {
+    "new_id": "260527016",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527016.done.search"
+  },
+  "features/20260527_web_ui.md": {
+    "new_id": "260527017",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527017.done.web_ui"
+  },
+  "features/20260527_workitem_model_and_core.md": {
+    "new_id": "260527018",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527018.done.workitem_model_and_core"
+  },
+  "features/20260527_worktree_status.md": {
+    "new_id": "260527019",
+    "new_path": "done/00.epic-260525012.done.taskman_python/00.feat-260527019.done.worktree_status"
+  }
+}

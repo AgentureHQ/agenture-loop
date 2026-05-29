@@ -1,0 +1,62 @@
+---
+status: done
+kind: task
+feature: workitem_model_and_core
+title: convert command for type relabel
+---
+
+# convert command for type relabel
+
+## Problem statement
+
+Type labels (`epic`/`feat`/`task`) are visual only and must be relabelable. The `task = leaf` invariant constrains conversion: an item with children cannot be relabelled to `task`. All other relabels are free.
+
+## Scope
+
+**In:** `taskman convert <id> <epic|feat|task>` subcommand; type token rewrite in both the on-disk name and the frontmatter; `task = leaf` invariant enforcement (reject `→ task` when item has children); pytest covering each path.
+
+**Out:** structural changes (no file↔dir conversion here — that happens in `new` when a child is added); status change (out of `convert`'s responsibility).
+
+## Acceptance criteria
+
+1. `taskman convert <id> feat` on an item without children rewrites the type token in both the name and the frontmatter.
+2. `taskman convert <id> task` rejects when the item has children, with a message naming the children that block the conversion.
+3. `taskman convert <id> epic` on a folder-item (has children) succeeds — only `→ task` is constrained.
+4. `taskman convert <id> task` on a leaf-file item succeeds.
+5. `taskman convert <id> <same-type>` is a no-op with a clear message and exit 0.
+6. pytest covers epic→feat, feat→task (leaf success), feat→task (children rejection), task→feat, task→epic, no-op.
+
+## Summary
+
+### Steps completed
+1. Implemented `taskman/src/taskman/commands/convert.py` — renames item (file or directory form) with new type token; updates YAML `type` in the body file; rejects `→ task` when item is in directory form (with a message naming offending children if any).
+2. Wired `convert` into `cli.py`.
+3. Wrote 10 tests in `tests/test_command_convert.py`: epic→feat on file form, feat→task leaf success, feat→task with children rejection, epic→feat on dir form succeeds, task→feat, task→epic, same-type no-op, missing ID, bad target type, status/priority preserved across convert.
+4. Full suite: 100 tests pass.
+
+### Notable decisions
+- **`→ task` rejected for any directory item**, even empty ones (no current dir-collapse path back to file). The leaf invariant is enforced strictly. If a user encounters an empty directory item and wants it as a task, they'd need an out-of-band fix — acceptable given no current command produces an empty directory item.
+- **Type label change is the only mutation.** Status, priority, slug, ID all preserved. Verified by `test_convert_preserves_status_and_priority`.
+
+### AC verification
+- AC 1 ✓ — epic→feat updates both name token and frontmatter type.
+- AC 2 ✓ — feat→task with children rejected; error names the children.
+- AC 3 ✓ — epic→feat on a directory item succeeds; verified.
+- AC 4 ✓ — feat→task on a leaf-file item succeeds.
+- AC 5 ✓ — same-type no-op returns exit 0.
+- AC 6 ✓ — all 6 transitions covered plus error paths.
+
+### Quality gates
+- pytest: 100/100 pass.
+- No status change during convert (verified).
+- No structural rep change (file↔dir) during convert.
+
+### Links
+- Feature: `tasks/features/20260527_workitem_model_and_core.md`
+- Predecessor: `tasks/done/20260527_tm_move_command.md`
+
+## Quality gates
+
+- pytest passes.
+- No status change during convert.
+- No file↔directory conversion during convert (representation change is `new`'s responsibility).

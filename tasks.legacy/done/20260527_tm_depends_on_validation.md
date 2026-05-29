@@ -1,0 +1,64 @@
+---
+status: done
+kind: task
+feature: schema_dependencies
+title: Extend validate with depends_on graph checks
+---
+
+# Extend validate with depends_on graph checks
+
+## Problem statement
+
+Future features (`dependency_queries`, `web_ui`) walk a dependency graph defined by an explicit `depends_on:` list in each item's frontmatter. The new schema needs this field plus `validate` extensions that detect cycles and unknown references before downstream commands rely on the graph.
+
+## Scope
+
+**In:** Reading `depends_on:` (list of stable item IDs) from frontmatter via the existing `ruamel.yaml` round-trip path (no schema changes — ruamel already preserves lists); extending `taskman validate` with graph checks: malformed `depends_on:` (not a list), unknown ID references (warning), cyclic `depends_on:` chains (error, prints cycle); structured findings in `--json` output.
+
+**Out:** `ready`/`dependents`/`waiting-on` query commands (feature `dependency_queries`); dependency-graph rendering (feature `web_ui`); bulk dependency editing; auto-fix.
+
+## Acceptance criteria
+
+1. `taskman validate` reads `depends_on:` from each item's frontmatter as a list of stable item IDs. Missing field is fine (no deps).
+2. Malformed `depends_on:` (not a list) emits a warning finding with code `malformed_depends_on`.
+3. References to IDs that do not exist in the tree emit a warning finding with code `unknown_dependency`, naming the offending ID.
+4. Cyclic chains produce an error finding with code `dependency_cycle` and print the cycle (e.g., `260527001 -> 260527002 -> 260527001`).
+5. `validate --json` includes graph findings in the same `{path, severity, code, message}` shape as other findings.
+6. pytest covers: empty graph, single-edge graph, multi-edge graph, transitive cycle, simple cycle, unknown ID, malformed depends_on, mixed clean+dirty tree.
+
+## Quality gates
+
+- pytest passes.
+- Graph checks are O(n + e) in items and edges (no infinite loops, even on cycles).
+- `validate` remains read-only.
+
+## Summary
+
+### Steps completed
+1. New module `taskman/src/taskman/model/graph.py` — `find_cycles` (DFS, ignores unknown refs, deterministic sort), `unknown_references` (graph → list of `(source, missing)` pairs). Reusable by future `dependency_queries` feature.
+2. Extended `taskman/src/taskman/commands/validate.py` — collects `(id → depends_on)` graph during the tree walk, then runs `unknown_references` (warnings) and `find_cycles` (errors) post-walk. Three new finding codes: `malformed_depends_on`, `unknown_dependency`, `dependency_cycle`. Module docstring updated.
+3. Tests: `tests/test_model_graph.py` (10 unit tests on the graph primitives) and `tests/test_validate_graph.py` (8 integration tests through the `validate` CLI: clean tree, valid deps, unknown ref → warn, simple cycle → error, transitive cycle, malformed depends_on → warn, JSON output, multi-edge graph).
+4. Full suite: 169 tests pass (151 prior + 18 new).
+
+### Notable decisions
+- **Graph algorithm in `model/`, not `commands/`.** Keeps the algorithm pure (no typer/IO) so the upcoming `dependency_queries` feature can reuse `find_cycles` and (with minor adaptation) traversal helpers without depending on validate.
+- **Cycles are errors; unknown refs are warnings.** A cycle definitively breaks any topological reasoning (e.g., "what's ready?" can't be answered); an unknown ref is recoverable (perhaps the reference points at an item not yet created). Severity choice matches the QA rule "warning does not block exit 0."
+- **`malformed_depends_on` is warning, not error.** YAML schema drift — recoverable; the validator surfaces it but doesn't refuse to run.
+- **No new CLI commands.** The feature scope is schema + validation only; `ready`/`dependents`/`waiting-on` are owned by feature `dependency_queries`.
+
+### AC verification
+- AC 1 ✓ — `validate` reads `depends_on:` lists from frontmatter; missing field handled as empty deps.
+- AC 2 ✓ — Non-list `depends_on` emits `malformed_depends_on` warning.
+- AC 3 ✓ — Unknown ID references emit `unknown_dependency` warning naming the missing ID.
+- AC 4 ✓ — Cyclic chains emit `dependency_cycle` error and print the cycle (e.g., `A -> B -> A`).
+- AC 5 ✓ — `validate --json` carries graph findings in standard `{path, severity, code, message}` shape.
+- AC 6 ✓ — pytest covers all listed cases (clean/valid/unknown/simple cycle/transitive cycle/malformed/multi-edge/JSON output).
+
+### Quality gates
+- pytest: 169/169 pass.
+- Graph checks DFS-based, O(n+e), terminate on cycles (GRAY-coloring prevents infinite descent).
+- `validate` remains read-only — no writes added.
+
+### Links
+- Feature: `tasks/features/20260527_schema_dependencies.md`
+- Module reused by upcoming `dependency_queries`: `taskman/src/taskman/model/graph.py`

@@ -1,0 +1,55 @@
+---
+status: done
+kind: task
+feature: search
+title: search command across the nested work-item tree
+---
+
+# search command across the nested work-item tree
+
+## Problem statement
+
+A growing nested tree needs a fast way to locate items by ID, slug, title, or body without manually grepping. Both humans and agents will use it; agents need `--json`.
+
+## Scope
+
+**In:** `taskman search <query>` subcommand; walks the entire nested tree once; matches against ID (exact), slug (exact or contains), title (token), and body (token); ranks results (exact ID > exact slug > slug-contains > title-token > body-token); `--json` output mode with the same record shape as `list`; pytest covering each match path and empty-result.
+
+**Out:** `/agn:define task` integration (deferred to follow-on `taskman_skill_integration` epic); fuzzy matching beyond regex/token; UI search (feature `web_ui`).
+
+## Acceptance criteria
+
+1. `taskman search "<query>"` walks the tasks tree and returns items matching against ID, slug, title, or body excerpt; output includes type, status, ID, slug, title, and path.
+2. Ranking: exact ID match > exact slug match > slug-contains > title-token > body-token.
+3. `taskman search --json "<query>"` returns the same results as structured JSON.
+4. Empty-result case returns exit 0 and a structured empty list / "(no matches)" text.
+5. pytest covers ranking order, exact-ID match, exact-slug match, title-token match, body-token match, JSON shape, empty-result, and tree-walk across mixed-shape fixtures (file + directory items).
+
+## Quality gates
+
+- pytest passes.
+- Read-only command; no writes.
+- `--json` writes only JSON on stdout; logs to stderr.
+
+## Summary
+
+### Steps completed
+1. New `taskman/src/taskman/commands/search.py` with `_Match` record, `_classify_match` ranking logic, and the `search` typer command.
+2. Registered as `taskman search` in `cli.py`.
+3. 10 tests covering: empty tree, no match, exact ID (rank 0), exact slug (rank 1), slug contains (rank 2), title token (rank 3 or better via slug), body token (rank 4), ranking order (best wins), nested-tree walk, human-readable output format.
+4. Full suite: 194 tests pass (184 prior + 10 new).
+
+### Notable decisions
+- **5-tier ranking** matches the AC verbatim (exact ID > exact slug > slug contains > title token > body token).
+- **Case-insensitive comparisons** for slug-contains, title, and body matches; ID and exact-slug matches use exact string comparison.
+- **Stable secondary sort by ID** within the same rank tier — keeps output deterministic.
+- **Body match reads frontmatter via `read_file`** (consistent with other commands) — adds slight per-file cost but keeps the codebase coherent.
+
+### AC verification
+- AC 1-5 ✓ verified by per-test mapping.
+- Human output uses `[<rank>] priority type id status slug title`.
+
+### Quality gates
+- pytest: 194/194 pass.
+- Read-only.
+- `--json` to stdout, `(no matches)` text to stdout, no stderr writes in the happy paths.
